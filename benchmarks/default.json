@@ -1,0 +1,399 @@
+{
+  "date": "2026-09-07",
+  "preset": "default",
+  "python": "3.12.13",
+  "platform": "Linux-7.0.0-30-generic-x86_64-with-glibc2.43",
+  "dependencies": {
+    "numpy": "2.5.3",
+    "polars": "1.44.1",
+    "flask": "3.1.3"
+  },
+  "wall_seconds": 159.76,
+  "peak_rss_kib": 822924,
+  "preview_seconds": 11.38973226599046,
+  "runs": 404,
+  "outage_nights": 7,
+  "statistics": {
+    "total_test_runs": 9978508,
+    "executed_test_runs": 9946778,
+    "total_failures": 23596,
+    "total_missing": 31730,
+    "failure_rate": 0.002372225458334347,
+    "failures_by_cause": {
+      "persistent": 10452,
+      "born_failing": 0,
+      "regression": 8329,
+      "correlated": 2655,
+      "flaky": 66,
+      "noise": 2094
+    },
+    "failure_rates_by_cause": {
+      "persistent": 0.0010507925279924816,
+      "born_failing": 0.0,
+      "regression": 0.0008373565791857424,
+      "correlated": 0.00026692060484309594,
+      "flaky": 6.635314470675831e-06,
+      "noise": 0.00021052043184235136
+    },
+    "missing_by_cause": {
+      "partial": 26700,
+      "truncated": 5030
+    },
+    "per_app": {
+      "atlas": {
+        "total_test_runs": 4173028,
+        "executed_test_runs": 4171166,
+        "total_failures": 9436,
+        "total_missing": 1862,
+        "failure_rate": 0.002262197188987444,
+        "failures_by_cause": {
+          "persistent": 6728,
+          "born_failing": 0,
+          "regression": 1798,
+          "correlated": 76,
+          "flaky": 0,
+          "noise": 834
+        },
+        "failure_rates_by_cause": {
+          "persistent": 0.001612978241575617,
+          "born_failing": 0.0,
+          "regression": 0.00043105453007624245,
+          "correlated": 1.8220324964290562e-05,
+          "flaky": 0.0,
+          "noise": 0.00019994409237129377
+        },
+        "missing_by_cause": {
+          "partial": 0,
+          "truncated": 1862
+        }
+      },
+      "beacon": {
+        "total_test_runs": 1191800,
+        "executed_test_runs": 1185900,
+        "total_failures": 1543,
+        "total_missing": 5900,
+        "failure_rate": 0.0013011215110886247,
+        "failures_by_cause": {
+          "persistent": 526,
+          "born_failing": 0,
+          "regression": 597,
+          "correlated": 169,
+          "flaky": 0,
+          "noise": 251
+        },
+        "failure_rates_by_cause": {
+          "persistent": 0.000443544986929758,
+          "born_failing": 0.0,
+          "regression": 0.0005034151277510751,
+          "correlated": 0.00014250779998313518,
+          "flaky": 0.0,
+          "noise": 0.00021165359642465637
+        },
+        "missing_by_cause": {
+          "partial": 5900,
+          "truncated": 0
+        }
+      },
+      "cipher": {
+        "total_test_runs": 1050400,
+        "executed_test_runs": 1045200,
+        "total_failures": 1742,
+        "total_missing": 5200,
+        "failure_rate": 0.0016666666666666668,
+        "failures_by_cause": {
+          "persistent": 194,
+          "born_failing": 0,
+          "regression": 1257,
+          "correlated": 82,
+          "flaky": 0,
+          "noise": 209
+        },
+        "failure_rates_by_cause": {
+          "persistent": 0.0001856104094910065,
+          "born_failing": 0.0,
+          "regression": 0.0012026406429391503,
+          "correlated": 7.845388442403367e-05,
+          "flaky": 0.0,
+          "noise": 0.00019996172981247607
+        },
+        "missing_by_cause": {
+          "partial": 5200,
+          "truncated": 0
+        }
+      },
+      "delta": {
+        "total_test_runs": 888800,
+        "executed_test_runs": 882200,
+        "total_failures": 1722,
+        "total_missing": 6600,
+        "failure_rate": 0.0019519383359782362,
+        "failures_by_cause": {
+          "persistent": 404,
+          "born_failing": 0,
+          "regression": 988,
+          "correlated": 144,
+          "flaky": 0,
+          "noise": 186
+        },
+        "failure_rates_by_cause": {
+          "persistent": 0.0004579460439809567,
+          "born_failing": 0.0,
+          "regression": 0.0011199274540920426,
+          "correlated": 0.00016322829290410339,
+          "flaky": 0.0,
+          "noise": 0.00021083654500113352
+        },
+        "missing_by_cause": {
+          "partial": 6600,
+          "truncated": 0
+        }
+      },
+      "ember": {
+        "total_test_runs": 727200,
+        "executed_test_runs": 722344,
+        "total_failures": 1261,
+        "total_missing": 4856,
+        "failure_rate": 0.001745705647170877,
+        "failures_by_cause": {
+          "persistent": 337,
+          "born_failing": 0,
+          "regression": 713,
+          "correlated": 64,
+          "flaky": 0,
+          "noise": 147
+        },
+        "failure_rates_by_cause": {
+          "persistent": 0.0004665367193470147,
+          "born_failing": 0.0,
+          "regression": 0.0009870643349982834,
+          "correlated": 8.860044521723722e-05,
+          "flaky": 0.0,
+          "noise": 0.00020350414760834172
+        },
+        "missing_by_cause": {
+          "partial": 3600,
+          "truncated": 1256
+        }
+      },
+      "forge": {
+        "total_test_runs": 606000,
+        "executed_test_runs": 606000,
+        "total_failures": 1160,
+        "total_missing": 0,
+        "failure_rate": 0.001914191419141914,
+        "failures_by_cause": {
+          "persistent": 278,
+          "born_failing": 0,
+          "regression": 750,
+          "correlated": 0,
+          "flaky": 0,
+          "noise": 132
+        },
+        "failure_rates_by_cause": {
+          "persistent": 0.00045874587458745876,
+          "born_failing": 0.0,
+          "regression": 0.0012376237623762376,
+          "correlated": 0.0,
+          "flaky": 0.0,
+          "noise": 0.00021782178217821783
+        },
+        "missing_by_cause": {
+          "partial": 0,
+          "truncated": 0
+        }
+      },
+      "glacier": {
+        "total_test_runs": 484800,
+        "executed_test_runs": 481200,
+        "total_failures": 2997,
+        "total_missing": 3600,
+        "failure_rate": 0.006228179551122194,
+        "failures_by_cause": {
+          "persistent": 1187,
+          "born_failing": 0,
+          "regression": 1483,
+          "correlated": 0,
+          "flaky": 66,
+          "noise": 261
+        },
+        "failure_rates_by_cause": {
+          "persistent": 0.002466749792186201,
+          "born_failing": 0.0,
+          "regression": 0.0030818786367414796,
+          "correlated": 0.0,
+          "flaky": 0.0001371571072319202,
+          "noise": 0.0005423940149625935
+        },
+        "missing_by_cause": {
+          "partial": 3600,
+          "truncated": 0
+        }
+      },
+      "harbor": {
+        "total_test_runs": 363600,
+        "executed_test_runs": 360588,
+        "total_failures": 673,
+        "total_missing": 3012,
+        "failure_rate": 0.0018663959976482857,
+        "failures_by_cause": {
+          "persistent": 76,
+          "born_failing": 0,
+          "regression": 200,
+          "correlated": 384,
+          "flaky": 0,
+          "noise": 13
+        },
+        "failure_rates_by_cause": {
+          "persistent": 0.00021076685857543789,
+          "born_failing": 0.0,
+          "regression": 0.0005546496278300997,
+          "correlated": 0.0010649272854337914,
+          "flaky": 0.0,
+          "noise": 3.605222580895648e-05
+        },
+        "missing_by_cause": {
+          "partial": 1800,
+          "truncated": 1212
+        }
+      },
+      "ion": {
+        "total_test_runs": 282800,
+        "executed_test_runs": 282100,
+        "total_failures": 1639,
+        "total_missing": 700,
+        "failure_rate": 0.005809996455157745,
+        "failures_by_cause": {
+          "persistent": 643,
+          "born_failing": 0,
+          "regression": 248,
+          "correlated": 698,
+          "flaky": 0,
+          "noise": 50
+        },
+        "failure_rates_by_cause": {
+          "persistent": 0.0022793335696561505,
+          "born_failing": 0.0,
+          "regression": 0.0008791208791208791,
+          "correlated": 0.0024742998936547324,
+          "flaky": 0.0,
+          "noise": 0.0001772421127259837
+        },
+        "missing_by_cause": {
+          "partial": 0,
+          "truncated": 700
+        }
+      },
+      "juno": {
+        "total_test_runs": 210080,
+        "executed_test_runs": 210080,
+        "total_failures": 1423,
+        "total_missing": 0,
+        "failure_rate": 0.0067736100533130235,
+        "failures_by_cause": {
+          "persistent": 79,
+          "born_failing": 0,
+          "regression": 295,
+          "correlated": 1038,
+          "flaky": 0,
+          "noise": 11
+        },
+        "failure_rates_by_cause": {
+          "persistent": 0.000376047220106626,
+          "born_failing": 0.0,
+          "regression": 0.0014042269611576543,
+          "correlated": 0.004940974866717441,
+          "flaky": 0.0,
+          "noise": 5.2361005331302364e-05
+        },
+        "missing_by_cause": {
+          "partial": 0,
+          "truncated": 0
+        }
+      }
+    }
+  },
+  "budget": {
+    "target_failure_rate": 0.0025,
+    "relative_deviation": -0.05110981666626123,
+    "within_budget": true,
+    "warning": null
+  },
+  "preview_matches_generation": true,
+  "parseback_sample": {
+    "runs": 20,
+    "test_rows": 494006,
+    "parsed_testcases": 494006,
+    "passed": true
+  },
+  "archive_path": "/tmp/resultsgen-benchmark.0tqJQO/archive/results",
+  "results_bytes": 1082011022,
+  "parquet_bytes": 31040805,
+  "failure_model": {
+    "target_failure_rate": 0.0025,
+    "background_noise_rate": 0.0002,
+    "persistent": {
+      "count": [
+        2,
+        8
+      ],
+      "duration_median": 60.0,
+      "duration_sigma": 0.7,
+      "never_fixed_prob": 0.0
+    },
+    "regression": {
+      "events": [
+        1,
+        3
+      ],
+      "tests": [
+        3,
+        40
+      ],
+      "duration": [
+        3,
+        25
+      ]
+    },
+    "correlated": {
+      "events": [
+        0,
+        2
+      ],
+      "duration": [
+        1,
+        2
+      ]
+    },
+    "flaky": {
+      "apps": [
+        1,
+        2
+      ],
+      "tests": [
+        3,
+        15
+      ],
+      "p_calm_to_flare": [
+        0.02,
+        0.06
+      ],
+      "p_flare_to_calm": [
+        0.25,
+        0.5
+      ],
+      "p_calm": [
+        0.005,
+        0.02
+      ],
+      "p_flare": [
+        0.15,
+        0.4
+      ]
+    },
+    "born_failing_prob": 0.3,
+    "born_failing_nights": [
+      1,
+      10
+    ]
+  }
+}

@@ -1,0 +1,120 @@
+{% extends "base.html" %}
+{% macro field(label, name, value, type="text", step=None) -%}
+<label>{{ label }}<input name="{{ name }}" type="{{ type }}" value="{{ form.get(name, value) }}" {% if step %}step="{{ step }}"{% endif %}></label>
+{%- endmacro %}
+{% set columns = [
+    ('Tests', 'test_count', 'number', ''), ('Suites', 'suite_count', 'number', ''), ('Personality', 'personality', 'choice', ''),
+    ('Removals', 'removals', 'number', ''), ('Additions', 'additions', 'number', ''),
+    ('Duration min', 'duration_lo', 'number', 'minutes'), ('Duration max', 'duration_hi', 'number', 'minutes'),
+    ('Partial rate', 'partial_rate', 'number', '0\u20131')] %}
+{% macro column_head(label, key) -%}
+<th><span class="col-head">{{ label }}<button type="button" class="col-toggle" data-column="{{ key }}" id="toggle-{{ key }}" aria-controls="range-{{ key }}" aria-expanded="false" aria-label="{{ label }}: randomize range" title="{{ label }}: randomize range" hidden>&#9662;</button></span></th>
+{%- endmacro %}
+{# Panels live outside the table: a scrolling or contained ancestor would clip them. #}
+{% macro range_panel(label, key, kind, unit) -%}
+<div class="col-panel" id="range-{{ key }}" data-column="{{ key }}" data-label="{{ label }}" role="group" aria-labelledby="range-title-{{ key }}" hidden>
+    <p class="col-title" id="range-title-{{ key }}">{{ label }}{% if unit %} <span class="hint">({{ unit }})</span>{% endif %}</p>
+    {% if kind == 'number' %}<div class="col-bounds">
+        <label>Min<input type="text" inputmode="decimal" data-range="min" aria-label="{{ label }} randomize minimum"></label>
+        <label>Max<input type="text" inputmode="decimal" data-range="max" aria-label="{{ label }} randomize maximum"></label>
+    </div>{% else %}<p class="hint">Picks one of stable, typical, noisy, or legacy.</p>{% endif %}
+    <label class="check"><input type="checkbox" data-range="include">Include in Randomize</label>
+    <div class="col-actions">
+        <button type="button" data-action="randomize-column">Randomize column</button>
+        <button type="button" data-action="reset-range">Reset</button>
+    </div>
+</div>
+{%- endmacro %}
+{% block content %}
+<h1>Build a nightly archive</h1>
+<p>Start with the small dev preset, adjust the patterns, then preview or generate your archive.</p>
+<nav class="toolbar" aria-label="Load configuration">
+    <a class="button" href="{{ url_for('index', preset='dev') }}">Load dev preset (2 apps)</a>
+    <a class="button" href="{{ url_for('index', preset='default') }}">Load default preset (10 apps)</a>
+    {% if names %}<form method="get"><label class="inline">Saved config <select name="name">{% for saved in names %}<option {% if saved == name %}selected{% endif %}>{{ saved }}</option>{% endfor %}</select></label><button>Load</button></form>{% endif %}
+</nav>
+{% if errors %}<div class="notice error" role="alert"><strong>Please fix these settings:</strong><ul>{% for error in errors %}<li>{{ error }}</li>{% endfor %}</ul></div>{% endif %}
+{% if message %}<p class="notice success" role="status">{{ message }}</p>{% endif %}
+<form method="post" id="config-editor">
+    {# Enter in a text field validates instead of activating a row's Remove button. #}
+    <button type="submit" name="action" value="validate" hidden>Validate</button>
+    <input type="hidden" name="base_config" value="{{ base_config|tojson|forceescape }}">
+    <section>
+        <h2>Archive</h2>
+        <div class="fields">
+            {{ field('Config name', 'name', name) }}
+            {{ field('Output directory', 'output_dir', cfg.output_dir) }}
+            {{ field('Archive name', 'archive_name', cfg.archive_name) }}
+            {{ field('Seed', 'seed', cfg.seed, 'number', '1') }}
+            {{ field('Timezone (local or IANA)', 'timezone', cfg.timezone) }}
+            <label class="check"><input type="checkbox" name="overwrite" {% if cfg.overwrite %}checked{% endif %}>Replace an existing archive</label>
+        </div>
+    </section>
+    <section>
+        <h2>Calendar</h2>
+        <div class="fields">
+            {{ field('First night', 'start_date', cfg.calendar.start_date, 'date') }}
+            {{ field('Last night', 'end_date', cfg.calendar.end_date, 'date') }}
+            {{ field('Earliest start', 'run_start_lo', cfg.calendar.run_start_window[0], 'time') }}
+            {{ field('Latest start', 'run_start_hi', cfg.calendar.run_start_window[1], 'time') }}
+            {{ field('Weekdays (0 = Mon, 6 = Sun)', 'days_of_week', cfg.calendar.days_of_week|join(',')) }}
+            {{ field('Outage probability per night', 'outage_night_rate', cfg.calendar.outage_night_rate, 'number', 'any') }}
+            {{ field('Outage extension probability', 'outage_extend_prob', cfg.calendar.outage_extend_prob, 'number', 'any') }}
+        </div>
+    </section>
+    <section id="applications">
+        <h2>Applications</h2>
+        <p>{{ cfg.apps|length }} applications configured. Each application produces one XML file per run, unless an outage or partial-file event prevents it.</p>
+        <p class="hint">The dev preset starts with 2 apps; the default preset starts with 10. Add more applications here as needed.</p>
+        <p class="hint">Duration is in minutes. Clear both duration fields to derive a range from test count. Clear an app's partial rate to inherit the global rate.</p>
+        <div class="table-scroll"><table id="app-table"><thead><tr><th>Name</th>
+            {% for label, key, kind, unit in columns %}{{ column_head(label, key) }}{% endfor %}<th>Actions</th></tr></thead>
+        <tbody>
+        {% for item in cfg.apps %}{% set i = loop.index0 %}<tr>
+            <td><input aria-label="App {{ i + 1 }} name" name="app_{{ i }}_name" value="{{ item.name }}"></td>
+            <td><input aria-label="{{ item.name }} tests" type="number" name="app_{{ i }}_test_count" value="{{ item.test_count }}"></td>
+            <td><input aria-label="{{ item.name }} suites" type="number" name="app_{{ i }}_suite_count" value="{{ item.suite_count }}"></td>
+            <td><select aria-label="{{ item.name }} personality" name="app_{{ i }}_personality">{% for personality in ['random', 'stable', 'typical', 'noisy', 'legacy'] %}<option {% if item.personality == personality %}selected{% endif %}>{{ personality }}</option>{% endfor %}</select></td>
+            <td><input aria-label="{{ item.name }} removals" type="number" name="app_{{ i }}_removals" value="{{ item.drift.removals }}"></td>
+            <td><input aria-label="{{ item.name }} additions" type="number" name="app_{{ i }}_additions" value="{{ item.drift.additions }}"></td>
+            <td><input aria-label="{{ item.name }} minimum duration" type="number" step="any" name="app_{{ i }}_duration_lo" value="{{ item.duration_minutes[0] if item.duration_minutes else '' }}"></td>
+            <td><input aria-label="{{ item.name }} maximum duration" type="number" step="any" name="app_{{ i }}_duration_hi" value="{{ item.duration_minutes[1] if item.duration_minutes else '' }}"></td>
+            <td><input aria-label="{{ item.name }} partial rate" type="number" step="any" name="app_{{ i }}_partial_rate" value="{{ item.partial_rate if item.partial_rate is not none else '' }}"></td>
+            <td><div class="row-actions"><button type="button" class="ghost" data-randomize-row aria-label="Randomize values for {{ item.name }}" hidden>Randomize</button><button name="action" value="remove_app:{{ i }}" formaction="{{ url_for('index') }}#applications" formnovalidate aria-label="Remove {{ item.name }} and its events" {% if cfg.apps|length == 1 %}disabled{% endif %}>Remove</button></div></td>
+        </tr>{% endfor %}
+        </tbody></table></div>
+        {% for label, key, kind, unit in columns %}{{ range_panel(label, key, kind, unit) }}{% endfor %}
+        <div class="toolbar">
+            <button name="action" value="add_app" formaction="{{ url_for('index') }}#applications" formnovalidate>Add application</button>
+            <button type="button" id="randomize-all" hidden>Randomize all applications</button>
+            <span class="hint" id="randomize-status" role="status" aria-live="polite"></span>
+        </div>
+        <p class="hint">Removing an application also removes its injected events from this draft. Save the config to keep your changes.</p>
+        <p class="hint">Randomize fills a row from the ranges set in the &#9662; menu on each column heading. Duration and partial rate start excluded so they keep inheriting; include them from their menus. Ranges are kept in this browser and never become part of the configuration.</p>
+    </section>
+    <section>
+        <h2>Failures and partial files</h2>
+        <div class="fields">
+            {{ field('Target failure rate', 'target_failure_rate', cfg.failure_model.target_failure_rate, 'number', 'any') }}
+            {{ field('Background noise rate', 'background_noise_rate', cfg.failure_model.background_noise_rate, 'number', 'any') }}
+            {{ field('Fraction with nonzero testcase time', 'nonzero_time_fraction', cfg.emit.nonzero_time_fraction, 'number', 'any') }}
+            {{ field('Global partial rate', 'partial_rate', cfg.partial.rate, 'number', 'any') }}
+            {% for mode, weight in cfg.partial.mode_weights.items() %}{{ field(mode|replace('_', ' ')|capitalize ~ ' weight', 'weight_' ~ mode, weight, 'number', 'any') }}{% endfor %}
+        </div>
+        <p class="hint">Probabilities use 0–1; 0.0025 means 0.25%. The four partial weights must sum to 1. Set the malformed weight to 0 and redistribute its weight to generate only well-formed files.</p>
+    </section>
+    <section>
+        <h2>Planted events and personalities</h2>
+        <p class="hint">Events use dates and app names. Edit the full config below to adjust other failure parameters.</p>
+        <label>Injected events (JSON)<textarea class="code" name="events_json" rows="13">{{ form.get('events_json', cfg.events|tojson(indent=2)) }}</textarea></label>
+        <details><summary>Personality multipliers</summary><label>Personalities (JSON)<textarea class="code" name="personalities_json" rows="16">{{ form.get('personalities_json', cfg.personalities|tojson(indent=2)) }}</textarea></label></details>
+    </section>
+    <details class="advanced"><summary>Advanced: full JSON configuration</summary>
+        <p>Enable this to use the JSON below as the complete configuration for the next action. Grouped form fields are used when this is off.</p>
+        <label class="check"><input type="checkbox" name="use_raw_json" {% if form.get('use_raw_json') %}checked{% endif %}>Use full JSON</label>
+        <label>Full configuration<textarea class="code" name="config_json" rows="24">{{ form.get('config_json', cfg|tojson(indent=2)) }}</textarea></label>
+    </details>
+    <div class="actions"><button name="action" value="save">Save config</button><button name="action" value="validate">Validate</button><button name="action" value="preview">Preview</button><button class="primary" name="action" value="generate">Generate archive</button></div>
+</form>
+{% endblock %}
+{% block scripts %}<script src="{{ url_for('static', filename='apps.js') }}" defer></script>{% endblock %}

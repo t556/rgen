@@ -1,0 +1,33 @@
+{
+  "schema_version": 1,
+  "seed": 20260907,
+  "archive_name": "results-dev",
+  "timezone": "UTC",
+  "calendar": {
+    "start_date": "2026-08-27",
+    "end_date": "2026-09-07",
+    "outage_night_rate": 0,
+    "outage_extend_prob": 0
+  },
+  "apps": [
+    {"name": "atlas", "test_count": 600, "suite_count": 12, "personality": "legacy", "duration_minutes": [180, 360]},
+    {"name": "beacon", "test_count": 120, "suite_count": 1, "personality": "typical"}
+  ],
+  "failure_model": {
+    "persistent": {"count": [0, 0]},
+    "regression": {"events": [0, 0]},
+    "correlated": {"events": [0, 0]},
+    "flaky": {"apps": [0, 0], "tests": [0, 0]}
+  },
+  "partial": {"rate": 0},
+  "events": [
+    {"type": "outage", "date": "2026-08-29"},
+    {"type": "partial", "date": "2026-08-30", "app": "atlas", "parameters": {"mode": "absent"}},
+    {"type": "partial", "date": "2026-08-31", "app": "atlas", "parameters": {"mode": "empty"}},
+    {"type": "partial", "date": "2026-09-01", "app": "atlas", "parameters": {"mode": "truncated_wellformed", "keep_suites": 5}},
+    {"type": "partial", "date": "2026-09-02", "app": "atlas", "parameters": {"mode": "truncated_malformed", "keep_suites": 5}},
+    {"type": "regression", "date": "2026-09-03", "app": "beacon", "targets": {"test_ids": [5, 6, 7]}, "parameters": {"duration": 3}},
+    {"type": "flaky", "date": "2026-08-27", "app": "beacon", "targets": {"test_ids": [0, 1]}, "parameters": {"p_calm_to_flare": 0.04, "p_flare_to_calm": 0.3, "p_calm": 0.01, "p_flare": 0.25}},
+    {"type": "removal", "date": "2026-09-04", "app": "atlas", "targets": {"test_ids": [2, 3]}}
+  ]
+}

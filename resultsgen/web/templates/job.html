@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block title %}{{ job.kind|capitalize }} · Results generator{% endblock %}
+{% block content %}
+<div id="job" data-status-url="{{ url_for('job_status', identifier=job.id) }}" data-status="{{ job.status }}">
+    <a href="{{ url_for('index', name=job.name) }}">← Back to {{ job.name }}</a>
+    <h1>{{ job.kind|capitalize }}: {{ job.name }}</h1>
+    <p id="status" role="status">{{ job.status|capitalize }}</p>
+    <progress id="progress" value="{{ job.runs_done }}" max="{{ job.runs_total or 1 }}" aria-label="Runs completed"></progress>
+    <p><span id="runs">{{ job.runs_done }} / {{ job.runs_total }} runs</span> · <span id="elapsed">{{ '%.1f'|format(job.elapsed) }}s</span> · Current run: <span id="current-run">{{ job.current_run or '—' }}</span></p>
+    {% if job.status == 'failed' %}<p class="notice error">The job failed{% if job.exit_code is not none %} (exit {{ job.exit_code }}){% endif %}. The log below contains the error. You can return to the config, make changes, and try again.</p>{% endif %}
+    {% if job.report %}{% set report = job.report %}{% set stats = report.statistics %}
+    <section id="report"><h2>{{ 'Preview report' if job.kind == 'preview' else 'Archive generated' }}</h2>
+        {% if report.results_root %}<p>Results root: <code>{{ report.results_root }}</code></p><p>Ground-truth sidecar: <code>{{ report.sidecar }}</code></p>{% endif %}
+        <p>{{ report.runs }} runs{% if report.outage_nights is defined %} · {{ report.outage_nights|length }} outage nights{% endif %} · {{ '{:,}'.format(stats.total_test_runs) }} test-runs · {{ '{:,}'.format(stats.total_failures) }} failures · {{ '%.4f'|format(stats.failure_rate * 100) }}% failure rate</p>
+        <p>{{ '{:,}'.format(stats.total_missing) }} missing test-runs. Failure rates use executed tests, excluding missing results.</p>
+        {% if report.budget.warning %}<p class="notice warning">{{ report.budget.warning }} Target: {{ '%.4f'|format(report.budget.target_failure_rate * 100) }}%.</p>{% endif %}
+        <div class="table-scroll"><table><thead><tr><th>Application</th><th>Test-runs</th><th>Failures</th><th>Missing</th><th>Failure rate</th></tr></thead><tbody>{% for name, values in stats.per_app.items() %}<tr><td>{{ name }}</td><td>{{ values.total_test_runs }}</td><td>{{ values.total_failures }}</td><td>{{ values.total_missing }}</td><td>{{ '%.4f'|format(values.failure_rate * 100) }}%</td></tr>{% endfor %}</tbody></table></div>
+        <div class="table-scroll"><table><thead><tr><th>Failure cause</th><th>Count</th></tr></thead><tbody>{% for cause, count in stats.failures_by_cause.items() %}<tr><td>{{ cause }}</td><td>{{ count }}</td></tr>{% endfor %}</tbody></table></div>
+        <details><summary>Full report, including events and parameters</summary><pre>{{ report|tojson(indent=2) }}</pre></details>
+    </section>
+    {% endif %}
+    <section><h2>Job log</h2><pre id="log">{{ job.log or 'Waiting for the job runner…' }}</pre></section>
+</div>
+{% endblock %}
+{% block scripts %}<script src="{{ url_for('static', filename='jobs.js') }}" defer></script>{% endblock %}

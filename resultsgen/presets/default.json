@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "seed": 20260907,
+  "calendar": {
+    "start_date": "2025-07-24",
+    "end_date": "2026-09-07"
+  },
+  "apps": [
+    {"name": "atlas", "test_count": 10400, "suite_count": 320, "personality": "legacy", "drift": {"removals": 4, "additions": 0}},
+    {"name": "beacon", "test_count": 2950, "suite_count": 60},
+    {"name": "cipher", "test_count": 2600, "suite_count": 45},
+    {"name": "delta", "test_count": 2200, "suite_count": 40},
+    {"name": "ember", "test_count": 1800, "suite_count": 30},
+    {"name": "forge", "test_count": 1500, "suite_count": 20},
+    {"name": "glacier", "test_count": 1200, "suite_count": 15},
+    {"name": "harbor", "test_count": 900, "suite_count": 5},
+    {"name": "ion", "test_count": 700, "suite_count": 1},
+    {"name": "juno", "test_count": 520, "suite_count": 1}
+  ]
+}

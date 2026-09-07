@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites time="0.375">
+    <testsuite name="Tests.Registration" time="0.125">
+        <testcase name="testCase1" classname="Tests.Registration" time="0" />
+        <testcase name="testCase2" classname="Tests.Registration" time="0.125">
+            <failure message="Assertion error message" type="">
+                Expected equality
+            </failure>
+        </testcase>
+    </testsuite>
+    <testsuite name="Tests.Authentication" time="0.250">
+        <testcase name="testCase3" classname="Tests.Authentication" time="0.250" />
+    </testsuite>
+</testsuites>

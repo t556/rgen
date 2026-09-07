@@ -1,0 +1,15 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}Results generator{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <header><a href="{{ url_for('index') }}">Results generator</a><span>Synthetic nightly JUnit archives</span></header>
+    <main>{% block content %}{% endblock %}</main>
+    <footer>Local workspace · Jobs are forgotten when this server restarts. Saved configs and generated archives remain on disk.</footer>
+    {% block scripts %}{% endblock %}
+</body>
+</html>

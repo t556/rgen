@@ -1,0 +1,27 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "resultsgen"
+version = "0.1.0"
+description = "Deterministic synthetic nightly JUnit archives with ground truth"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = ["numpy>=2.0", "polars>=1.0", "flask>=3.0"]
+
+[project.optional-dependencies]
+dev = ["pytest>=8"]
+
+[project.scripts]
+resultsgen = "resultsgen.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["resultsgen*"]
+
+[tool.setuptools.package-data]
+resultsgen = ["presets/*.json", "vocab/*.txt", "web/templates/*.html", "web/static/*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
