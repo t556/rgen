@@ -1,3 +1,6 @@
+AI written tool to generate results. Junit xml files. Used for building and testing tools.
+
+
 # resultsgen
 
 resultsgen makes up nightly test results. It writes JUnit XML the way a CI
