@@ -10,3 +10,4 @@ configs/
 jobs/
 .coverage
 ignore/
+lancedb/
